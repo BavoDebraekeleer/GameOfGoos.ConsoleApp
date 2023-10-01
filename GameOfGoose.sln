@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfGoose", "GameOfGoose\GameOfGoose.csproj", "{ECC1D7E4-7A9B-4BC8-A2EB-61DF67E45FFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfGoose.Tests", "GameOfGoose.Tests\GameOfGoose.Tests.csproj", "{3EAFB049-0A26-4DDB-B496-8F03D30DA979}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECC1D7E4-7A9B-4BC8-A2EB-61DF67E45FFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECC1D7E4-7A9B-4BC8-A2EB-61DF67E45FFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECC1D7E4-7A9B-4BC8-A2EB-61DF67E45FFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECC1D7E4-7A9B-4BC8-A2EB-61DF67E45FFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EAFB049-0A26-4DDB-B496-8F03D30DA979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EAFB049-0A26-4DDB-B496-8F03D30DA979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EAFB049-0A26-4DDB-B496-8F03D30DA979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EAFB049-0A26-4DDB-B496-8F03D30DA979}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C14A9894-A279-4269-92BE-CD689707EB3B}
+	EndGlobalSection
+EndGlobal
