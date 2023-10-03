@@ -8,13 +8,17 @@ public class MessageOnlyHazardSpaceGameRule : GameRule, IHazardSpaceGameRule
 
     public MessageOnlyHazardSpaceGameRule(string message, string name, int hazardSpacePosition)
     {
-        Message = message;
+        Message = $"Landed on Hazard Space: {name}. {message}";
         Name = name;
         HazardSpacePosition = hazardSpacePosition;
     }
 
-    public override void DoRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
+    public override bool DoGameRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
     {
-        // Nothing to check.
+        if (gooseList[currentGoose].PositionToGo == HazardSpacePosition)
+        {
+            return true;
+        }
+        return false;
     }
 }

@@ -20,7 +20,7 @@ public class FirstDiceRollGameRule : GameRule
         _positionToGo = positionToGo;
     }
 
-    public override void DoRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
+    public override bool DoGameRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
     {
         if (gooseList[currentGoose].Position == 0)
         {
@@ -28,7 +28,9 @@ public class FirstDiceRollGameRule : GameRule
             if (diceRoll.SequenceEqual(_diceRollToCheck))
             {
                 gooseList[currentGoose].PositionToGo = _positionToGo;
+                return true;
             }
         }
+        return false;
     }
 }

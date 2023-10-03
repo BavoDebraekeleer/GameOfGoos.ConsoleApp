@@ -1,31 +1,33 @@
 ﻿using GameOfGoose.GameRules;
+using GameOfGoose.Messengers;
+using System;
 
 namespace GameOfGoose;
 
 public class GameLoop
 {
     public List<Goose> GooseList = new List<Goose>();
-    public List<GameRule> _gameRulesList;
     private Dice _dice;
-
-    private int _currentGoose;
-    private int _turn;
+    private List<GameRule> _gameRulesSet;
     private int _gameOverPosition;
+    private IMessenger _messenger;
+
+    private int _currentGoose = 0;
+    private int _turn = 0;
+    private int[] _currentDiceRoll;
     private bool _isGameOver;
 
-    public GameLoop(int amountOfPlayers, Dice dice, List<GameRule> rulesList, int gameOverPosition)
+    public GameLoop(int amountOfPlayers, Dice dice, List<GameRule> gameRulesSet, int gameOverPosition, IMessenger messenger)
     {
         for (int i = 0; i < amountOfPlayers; i++)
         {
             GooseList.Add(new Goose());
         }
         _dice = dice;
-        _gameRulesList = rulesList;
-    }
-
-    public void RulesSetup()
-    {
-        // RulesList.Add(new Rule());
+        _currentDiceRoll = _dice.RollDice();
+        _gameRulesSet = gameRulesSet;
+        _gameOverPosition = gameOverPosition;
+        _messenger = messenger;
     }
 
     public void Play()
@@ -33,52 +35,103 @@ public class GameLoop
         while (!_isGameOver)
         {
             _turn++;
-
-            Console.WriteLine($"Press Space to start turn {_turn}.");
-            Console.ReadLine();
+            _messenger.ShowMessage($"----------------------------------");
+            // _messenger.WaitForInput($"Press Enter to start turn {_turn}.");
+            _messenger.ShowMessage($"Press Enter to start turn {_turn}.");
 
             if (GooseList[_currentGoose].isSkip)
             {
                 GooseList[_currentGoose].isSkip = false;
-                Console.WriteLine($"Goose {_currentGoose + 1} has to skip this turn.");
+                _messenger.ShowMessage($"Goose {_currentGoose + 1} has to skip this turn.");
             }
             else if (GooseList[_currentGoose].isStuck)
             {
-                Console.WriteLine($"Goose {_currentGoose + 1} is still stuck.");
+                _messenger.ShowMessage($"Goose {_currentGoose + 1} is still stuck on space {GooseList[_currentGoose].Position}.");
             }
             else
             {
-                var diceRoll = _dice.RollDice();
-                GooseList[_currentGoose].PositionToGo = diceRoll.Sum();
+                _messenger.ShowMessage($"Goose {_currentGoose + 1} is on space {GooseList[_currentGoose].Position}.");
 
-                foreach (var rule in _gameRulesList)
+                GetCurrentGooseNewPositionToGo();
+                do
                 {
-                    rule.DoRuleCheck(GooseList, _currentGoose, diceRoll);
-                    Console.WriteLine(rule.Message);
-                }
+                    DoGameRulesSetCheck();
+                } while (CheckForGameOverPositionOvershoot());
 
-                // All Goose positions may need to update, e.g. OccupiedSpaceGameRule.
-                for (var i = 0; i < GooseList.Count; i++)
-                {
-                    if (GooseList[i].Position != GooseList[i].PositionToGo)
-                    {
-                        GooseList[i].GoToPosition();
-                        Console.WriteLine($"Goose {i + 1} moved to space {GooseList[i].Position}.");
-                    }
-                }
+                UpdateAllGoosePositions();
             }
-            _currentGoose++;
-            if (_currentGoose == GooseList.Count)
+
+            CheckIsGameOver();
+            SelectNextGoose();
+        }
+    }
+
+    private void GetCurrentGooseNewPositionToGo()
+    {
+        _currentDiceRoll = _dice.RollDice();
+        var diceRollThrow = _currentDiceRoll.Sum();
+        string diceRollText = String.Join(", ", _currentDiceRoll);
+        _messenger.ShowMessage($"Goose {_currentGoose + 1} rolls {diceRollText}. Total throw is {diceRollThrow}.");
+
+        GooseList[_currentGoose].PositionToGo += diceRollThrow;
+    }
+
+    private bool CheckForGameOverPositionOvershoot()
+    {
+        var nextPositionToGo = GooseList[_currentGoose].PositionToGo;
+        if (nextPositionToGo > _gameOverPosition)
+        {
+            var overshoot = nextPositionToGo - _gameOverPosition;
+            nextPositionToGo = _gameOverPosition - overshoot;
+            GooseList[_currentGoose].PositionToGo = nextPositionToGo;
+
+            _messenger.ShowMessage($"Dang it! Overshot the Game Over space {_gameOverPosition} " +
+                $"by {overshoot}. You need to move back {overshoot} spaces.");
+
+            return true;
+        }
+        return false;
+    }
+
+    private void DoGameRulesSetCheck()
+    {
+        foreach (var rule in _gameRulesSet)
+        {
+            if (rule.DoGameRuleCheck(GooseList, _currentGoose, _currentDiceRoll))
             {
-                _currentGoose = 0;
+                _messenger.ShowMessage(rule.Message);
             }
-            
-            if (GooseList[_currentGoose].Position == _gameOverPosition)
+        }
+    }
+
+    private void UpdateAllGoosePositions()
+    {
+        // All Goose positions may need to update, e.g. OccupiedSpaceGameRule.
+        for (var i = 0; i < GooseList.Count; i++)
+        {
+            if (GooseList[i].Position != GooseList[i].PositionToGo)
             {
-                _isGameOver = true;
-                Console.WriteLine("Game Over!");
-                Console.WriteLine($"Goose {_currentGoose + 1} won the game in {_turn} turns.")
+                GooseList[i].GoToPosition();
+                _messenger.ShowMessage($"Goose {i + 1} moved to space {GooseList[i].Position}.");
             }
+        }
+    }
+    private void CheckIsGameOver()
+    {
+        if (GooseList[_currentGoose].Position == _gameOverPosition)
+        {
+            _isGameOver = true;
+            _messenger.ShowMessage("Game Over!");
+            _messenger.ShowMessage($"Goose {_currentGoose + 1} won the game in {_turn} turns.");
+        }
+    }
+
+    private void SelectNextGoose()
+    {
+        _currentGoose++;
+        if (_currentGoose == GooseList.Count)
+        {
+            _currentGoose = 0;
         }
     }
 }

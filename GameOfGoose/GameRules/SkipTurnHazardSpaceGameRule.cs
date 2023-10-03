@@ -8,16 +8,18 @@ public class SkipTurnHazardSpaceGameRule : GameRule, IHazardSpaceGameRule
 
     public SkipTurnHazardSpaceGameRule(string message, string name, int hazardSpacePosition)
     {
-        Message = message;
+        Message = $"Landed on Hazard Space: {name}. {message}";
         Name = name;
         HazardSpacePosition = hazardSpacePosition;
     }
 
-    public override void DoRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
+    public override bool DoGameRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
     {
         if (gooseList[currentGoose].PositionToGo == HazardSpacePosition)
         {
             gooseList[currentGoose].isSkip = true;
+            return true;
         }
+        return false;
     }
 }

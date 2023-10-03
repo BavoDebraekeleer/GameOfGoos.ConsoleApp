@@ -20,7 +20,7 @@ public class RulesTests
         var currentGoose = 0;
 
         // 2. Act
-        gameRule.DoRuleCheck(gooseList, currentGoose, diceRoll);
+        gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
         gooseList[currentGoose].GoToPosition();
 
         // 3. Assert
@@ -43,19 +43,19 @@ public class RulesTests
 
         gooseList[0].Position = 10;
         gooseList[0].PositionToGo = 10;
-        gooseList[1].Position = 0;
-        gooseList[1].PositionToGo = 10;
+        gooseList[currentGoose].Position = 0;
+        gooseList[currentGoose].PositionToGo = 10;
 
         // 2. Act
-        gameRule.DoRuleCheck(gooseList, currentGoose, diceRoll);
+        gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
         Assert.Equal(0, gooseList[0].PositionToGo);
-        Assert.Equal(10, gooseList[1].PositionToGo);
+        Assert.Equal(10, gooseList[currentGoose].PositionToGo);
     }
 
     [Fact]
-    public void ShouldSetBothGoosePositionsEqualAndUnstuckTheOtherGoose()
+    public void ShouldSetGoosePositionsEqualAndUnstuckTheOtherGoose()
     {
         // 1. Arrange
         var gameRule = new OccupiedSpaceGameRule("");
@@ -63,23 +63,29 @@ public class RulesTests
         {
             new Goose(),
             new Goose(),
+            new Goose(),
         };
-        var currentGoose = 1;
+        var currentGoose = 2;
         var diceRoll = new int[] { 5, 5 };
 
-        gooseList[0].isStuck = true;
+        gooseList[0].isStuck = false;
         gooseList[0].Position = 10;
         gooseList[0].PositionToGo = 10;
-        gooseList[1].Position = 0;
+        gooseList[1].isStuck = true;
+        gooseList[1].Position = 10;
         gooseList[1].PositionToGo = 10;
+        gooseList[currentGoose].isStuck = false;
+        gooseList[currentGoose].Position = 0;
+        gooseList[currentGoose].PositionToGo = 10;
 
         // 2. Act
-        gameRule.DoRuleCheck(gooseList, currentGoose, diceRoll);
+        gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
-        Assert.False(gooseList[0].isStuck);
+        Assert.False(gooseList[1].isStuck);
         Assert.Equal(10, gooseList[0].PositionToGo);
         Assert.Equal(10, gooseList[1].PositionToGo);
+        Assert.Equal(10, gooseList[currentGoose].PositionToGo);
     }
 
     // GooseSpaceGameRule
@@ -101,16 +107,16 @@ public class RulesTests
         gooseList[0].PositionToGo = 10;
         gooseList[1].Position = 15;
         gooseList[1].PositionToGo = 15;
-        gooseList[2].Position = 0;
-        gooseList[2].PositionToGo = 5;
+        gooseList[currentGoose].Position = 0;
+        gooseList[currentGoose].PositionToGo = 5;
 
         // 2. Act
-        gameRule.DoRuleCheck(gooseList, currentGoose, diceRoll);
+        gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
         Assert.Equal(10, gooseList[0].PositionToGo);
         Assert.Equal(15, gooseList[1].PositionToGo);
-        Assert.Equal(20, gooseList[2].PositionToGo);
+        Assert.Equal(20, gooseList[currentGoose].PositionToGo);
     }
 
     // IHazardSpaceGameRules
@@ -132,10 +138,10 @@ public class RulesTests
         var diceRoll = new int[] { 3, 3 };
 
         // 2. Act
-        gameRule.DoRuleCheck(gooseList, currentGoose, diceRoll);
+        gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
-        Assert.Equal(positionToGo, gooseList[0].PositionToGo);
+        Assert.Equal(positionToGo, gooseList[currentGoose].PositionToGo);
     }
 
     // SkipTurnHazardSpaceGameRule
@@ -155,10 +161,10 @@ public class RulesTests
         var diceRoll = new int[] { 3, 3 };
 
         // 2. Act
-        gameRule.DoRuleCheck(gooseList, currentGoose, diceRoll);
+        gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
-        Assert.True(gooseList[0].isSkip);
+        Assert.True(gooseList[currentGoose].isSkip);
     }
 
     // StuckHazardSpaceGameRule
@@ -178,9 +184,9 @@ public class RulesTests
         var diceRoll = new int[] { 3, 3 };
 
         // 2. Act
-        gameRule.DoRuleCheck(gooseList, currentGoose, diceRoll);
+        gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
-        Assert.True(gooseList[0].isStuck);
+        Assert.True(gooseList[currentGoose].isStuck);
     }
 }

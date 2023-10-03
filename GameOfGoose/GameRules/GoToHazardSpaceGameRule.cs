@@ -10,17 +10,19 @@ public class GoToHazardSpaceGameRule : GameRule, IHazardSpaceGameRule
 
     public GoToHazardSpaceGameRule(string message, string name, int hazardSpacePosition, int positionToGo)
     {
-        Message = message;
+        Message = $"Landed on Hazard Space: {name}. {message}";
         Name = name;
         HazardSpacePosition = hazardSpacePosition;
         _positionToGo = positionToGo;
     }
 
-    public override void DoRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
+    public override bool DoGameRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
     {
         if (gooseList[currentGoose].PositionToGo == HazardSpacePosition)
         {
             gooseList[currentGoose].PositionToGo = _positionToGo;
+            return true;
         }
+        return false;
     }
 }

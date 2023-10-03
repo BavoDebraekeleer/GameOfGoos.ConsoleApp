@@ -11,26 +11,31 @@ public class GooseSpaceGameRule : GameRule
         Message = message;
         _gooseSpacePositions = gooseSpaces;
     }
-    public override void DoRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
+    public override bool DoGameRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
     {
         foreach (var gooseSpacePosition in _gooseSpacePositions)
         {
             if (gooseList[currentGoose].PositionToGo == gooseSpacePosition)
             {
-                gooseList[currentGoose].PositionToGo += diceRoll.Sum();
+                int diceRollTotal = diceRoll.Sum();
+                gooseList[currentGoose].PositionToGo += diceRollTotal;
+                Message += $" Gets to move forward again by {diceRollTotal}.";
 
-                while (OccupiedSpaceCheck(gooseList, currentGoose, diceRoll));
+                while (OccupiedSpaceCheck(gooseList, currentGoose, diceRollTotal)) ;
+                return true;
             }
         }
+        return false;
     }
 
-    public bool OccupiedSpaceCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
+    private bool OccupiedSpaceCheck(List<Goose> gooseList, int currentGoose, int diceRollTotal)
     {
         foreach (var goose in gooseList)
         {
             if (goose.Position == gooseList[currentGoose].PositionToGo)
             {
-                gooseList[currentGoose].PositionToGo += diceRoll.Sum();
+                gooseList[currentGoose].PositionToGo += diceRollTotal;
+                Message += $" Space occupied by another goose. Move forward again by {diceRollTotal}.";
                 return true;
             }
         }
