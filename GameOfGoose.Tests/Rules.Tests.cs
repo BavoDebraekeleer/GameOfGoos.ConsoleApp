@@ -68,13 +68,13 @@ public class RulesTests
         var currentGoose = 2;
         var diceRoll = new int[] { 5, 5 };
 
-        gooseList[0].isStuck = false;
+        gooseList[0].IsStuck = false;
         gooseList[0].Position = 10;
         gooseList[0].PositionToGo = 10;
-        gooseList[1].isStuck = true;
+        gooseList[1].IsStuck = true;
         gooseList[1].Position = 10;
         gooseList[1].PositionToGo = 10;
-        gooseList[currentGoose].isStuck = false;
+        gooseList[currentGoose].IsStuck = false;
         gooseList[currentGoose].Position = 0;
         gooseList[currentGoose].PositionToGo = 10;
 
@@ -82,7 +82,7 @@ public class RulesTests
         gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
-        Assert.False(gooseList[1].isStuck);
+        Assert.False(gooseList[1].IsStuck);
         Assert.Equal(10, gooseList[0].PositionToGo);
         Assert.Equal(10, gooseList[1].PositionToGo);
         Assert.Equal(10, gooseList[currentGoose].PositionToGo);
@@ -164,7 +164,7 @@ public class RulesTests
         gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
-        Assert.True(gooseList[currentGoose].isSkip);
+        Assert.True(gooseList[currentGoose].IsSkip);
     }
 
     // StuckHazardSpaceGameRule
@@ -187,6 +187,6 @@ public class RulesTests
         gameRule.DoGameRuleCheck(gooseList, currentGoose, diceRoll);
 
         // 3. Assert
-        Assert.True(gooseList[currentGoose].isStuck);
+        Assert.True(gooseList[currentGoose].IsStuck);
     }
 }

@@ -17,7 +17,7 @@ public class SkipTurnHazardSpaceGameRule : GameRule, IHazardSpaceGameRule
     {
         if (gooseList[currentGoose].PositionToGo == HazardSpacePosition)
         {
-            gooseList[currentGoose].isSkip = true;
+            gooseList[currentGoose].IsSkip = true;
             return true;
         }
         return false;

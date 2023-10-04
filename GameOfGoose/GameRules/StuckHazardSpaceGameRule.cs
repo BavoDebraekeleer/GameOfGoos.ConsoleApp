@@ -17,7 +17,7 @@ public class StuckHazardSpaceGameRule : GameRule, IHazardSpaceGameRule
     {
         if (gooseList[currentGoose].PositionToGo == HazardSpacePosition)
         {
-            gooseList[currentGoose].isStuck = true;
+            gooseList[currentGoose].IsStuck = true;
             return true;
         }
         return false;

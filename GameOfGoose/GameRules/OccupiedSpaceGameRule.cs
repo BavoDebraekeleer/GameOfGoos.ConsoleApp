@@ -2,8 +2,8 @@
 
 /// <summary>
 /// Game Rule to check if the PositionToGo space is occupied by another Goose.
-/// If the other Goose isStuck (set by a Hazard space) it is released here.
-/// In this case the current Goose will be set to isStuck by the Hazard space Game Rule.
+/// If the other Goose IsStuck (set by a Hazard space) it is released here.
+/// In this case the current Goose will be set to IsStuck by the Hazard space Game Rule.
 /// If the other Goose is not stuck, their positions are swapped.
 /// </summary>
 public class OccupiedSpaceGameRule : GameRule
@@ -17,7 +17,7 @@ public class OccupiedSpaceGameRule : GameRule
     public override bool DoGameRuleCheck(List<Goose> gooseList, int currentGoose, int[] diceRoll)
     {
         var isStuckFoundOnPositionToGo = false;
-        var gooseOnPositionToGo = new Dictionary<int, bool>(); // <index, isStuck>
+        var gooseOnPositionToGo = new Dictionary<int, bool>(); // <index, IsStuck>
 
         // Goes over all Goose instances to check:
         // 1. If there is a already another Goose on the current turn's Goose's PositionToGo.
@@ -26,7 +26,7 @@ public class OccupiedSpaceGameRule : GameRule
         {
             if (gooseList[i].Position == gooseList[currentGoose].PositionToGo)
             {
-                if (gooseList[i].isStuck)
+                if (gooseList[i].IsStuck)
                 {
                     isStuckFoundOnPositionToGo = true;
                     gooseOnPositionToGo.Add(i, true);
@@ -46,7 +46,7 @@ public class OccupiedSpaceGameRule : GameRule
             if (isStuckFoundOnPositionToGo) // gooseOnPositionToGo.ContainsKey(true) should also work, but less readable.
             {
                 var index = gooseOnPositionToGo.FirstOrDefault(x => x.Value == true).Key;
-                gooseList[index].isStuck = false;
+                gooseList[index].IsStuck = false;
             }
             else
             {

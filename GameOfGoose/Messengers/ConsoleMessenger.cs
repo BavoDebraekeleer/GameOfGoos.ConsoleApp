@@ -14,9 +14,9 @@ public class ConsoleMessenger : IMessenger
         _textWriter.WriteLine(message);
     }
 
-    public void WaitForInput(string message)
+    public string? GetUserInput(string message)
     {
         Console.Write(message);
-        Console.ReadLine();
+        return Console.ReadLine();
     }
 }

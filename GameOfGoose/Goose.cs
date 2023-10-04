@@ -19,12 +19,13 @@ public class Goose
     /// <summary>
     /// If the Goose has to skip a turn, this bool should be set to true.
     /// </summary>
-    public bool isSkip {  get; set; }
+    public bool IsSkip {  get; set; }
 
     /// <summary>
     /// If the Goose gets stuck at a Hazard space, this bool should be set to true.
     /// </summary>
-    public bool isStuck { get; set; }
+    public bool IsStuck { get; set; }
+    public bool IsHungover { get; set; }
 
     /// <summary>
     /// Set the Goose's position to the PositionToGo after all GameRule checks have completed.
@@ -33,5 +34,20 @@ public class Goose
     public void GoToPosition()
     {
         Position = PositionToGo;
+    }
+
+    public void MovePlayer(int diceRoll)
+    {
+        var steps = diceRoll;
+        if (IsHungover)
+        {
+            steps = steps / 2;
+        }
+        Position += steps;
+    }
+
+    public void MoveToPosition(int newPosition)
+    {
+        Position = newPosition;
     }
 }

@@ -36,15 +36,15 @@ public class GameLoop
         {
             _turn++;
             _messenger.ShowMessage($"----------------------------------");
-            // _messenger.WaitForInput($"Press Enter to start turn {_turn}.");
+            // _messenger.GetUserInput($"Press Enter to start turn {_turn}.");
             _messenger.ShowMessage($"Press Enter to start turn {_turn}.");
 
-            if (GooseList[_currentGoose].isSkip)
+            if (GooseList[_currentGoose].IsSkip)
             {
-                GooseList[_currentGoose].isSkip = false;
+                GooseList[_currentGoose].IsSkip = false;
                 _messenger.ShowMessage($"Goose {_currentGoose + 1} has to skip this turn.");
             }
-            else if (GooseList[_currentGoose].isStuck)
+            else if (GooseList[_currentGoose].IsStuck)
             {
                 _messenger.ShowMessage($"Goose {_currentGoose + 1} is still stuck on space {GooseList[_currentGoose].Position}.");
             }
